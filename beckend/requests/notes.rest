@@ -1,0 +1,26 @@
+GET http://localhost:3001/cards
+
+###
+GET http://localhost:3001/cards/116599889
+
+###
+DELETE http://localhost:3001/cards/116599889
+
+### 
+POST http://localhost:3001/cards
+Content-Type: application/json
+
+{
+    "word": "test",
+    "transcription": "[test]",
+    "translation": "тест",
+    "learned": true,
+    "examples": ["пример пример пример", "example example example"],
+    "colection": ["11111111111","2222222222222222"],
+     "repetitions": [{
+       "isItRight": true,
+      "data": "d33ew" 
+    }],
+    "id": 116599889,
+    "img": "https://image.shutterstock.com/image-vector/design-concept-word-english-website-260nw-1043962963.jpg"
+}
