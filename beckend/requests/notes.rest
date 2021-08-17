@@ -1,10 +1,10 @@
 GET http://localhost:3001/cards
 
 ###
-GET http://localhost:3001/cards/116599889
+GET http://localhost:3001/cards/6117fc3a3d2bda2e880b14ce
 
 ###
-DELETE http://localhost:3001/cards/116599889
+DELETE http://localhost:3001/cards/6118e33de5bad0178084b37e
 
 ### 
 POST http://localhost:3001/cards
@@ -21,6 +21,5 @@ Content-Type: application/json
        "isItRight": true,
       "data": "d33ew" 
     }],
-    "id": 116599889,
     "img": "https://image.shutterstock.com/image-vector/design-concept-word-english-website-260nw-1043962963.jpg"
 }
