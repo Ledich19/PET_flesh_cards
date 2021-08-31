@@ -1,29 +1,24 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
 
-const cardSchema = new mongoose.Schema({
-  word: {
+const colectionSchema = new mongoose.Schema({
+  name: {
     type: String,
     minLength: 2,
     required: true,
   },
-  transcription: String,
-  translation: String,
-  learned: Boolean,
-  examples: [],
-  repetitions: [],
-  img: String,
-  colection: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Colection',
-  },
+  words: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Card',
+    }],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
 })
 
-cardSchema.set('toJSON', {
+colectionSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     const newReturnedObject = returnedObject
     newReturnedObject.id = returnedObject._id.toString()
@@ -32,4 +27,4 @@ cardSchema.set('toJSON', {
   },
 })
 
-module.exports = mongoose.model('Card', cardSchema)
+module.exports = mongoose.model('Colection', colectionSchema)

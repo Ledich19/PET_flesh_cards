@@ -1,6 +1,7 @@
 const Card = require('../models/card')
+const User = require('../models/user')
 
-const initialCard = [{
+const initialCards = [{
   word: 'one',
   transcription: '[one]',
   translation: 'один',
@@ -50,7 +51,11 @@ const cardsInDb = async () => {
   const notes = await Card.find({})
   return notes.map((card) => card.toJSON())
 }
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map((u) => u.toJSON())
+}
 
 module.exports = {
-  initialCard, nonExistingId, cardsInDb,
+  initialCards, nonExistingId, cardsInDb, usersInDb,
 }

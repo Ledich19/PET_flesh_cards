@@ -8,10 +8,40 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await Card.deleteMany({})
-  let noteObject = new Card(helper.initialCard[0])
-  await noteObject.save()
-  noteObject = new Card(helper.initialCard[1])
-  await noteObject.save()
+  console.log('cleared')
+
+  const cardObjects = helper.initialCards.map((card) => new Card(card))
+  const promiseArray = cardObjects.map((card) => card.save())
+  await Promise.all(promiseArray)
+  console.log('done')
+})
+
+describe('when there is initially some Cards saved', () => {
+  test('card can be update', async () => {
+    const cardsAtStart = await helper.cardsInDb()
+    const cardToUpdate = cardsAtStart[0]
+    const cardEdit = {
+      word: 'update',
+      transcription: '[update]',
+      translation: 'update',
+      learned: true,
+      examples: ['update', 'update'],
+      colection: ['update', 'update'],
+      repetitions: [{
+        isItRight: true,
+        data: new Date(),
+      }],
+      img: 'update',
+    }
+    await api.put(`/cards/${cardToUpdate.id}`)
+      .send(cardEdit)
+      .expect(200)
+    const cardsAtEnd = await helper.cardsInDb()
+
+    expect(cardsAtEnd[0].word).toContain(
+      'update',
+    )
+  })
 })
 
 test('notes are returned as json', async () => {
@@ -24,7 +54,7 @@ test('notes are returned as json', async () => {
 test('there are two cards', async () => {
   const response = await api.get('/cards')
 
-  expect(response.body).toHaveLength(helper.initialCard.length)
+  expect(response.body).toHaveLength(helper.initialCards.length)
 })
 
 test('the first card is one', async () => {
@@ -58,7 +88,7 @@ test('a valid card can be added', async () => {
     .expect('Content-Type', /application\/json/)
 
   const cardsAtEnd = await helper.cardsInDb()
-  expect(cardsAtEnd).toHaveLength(helper.initialCard.length + 1)
+  expect(cardsAtEnd).toHaveLength(helper.initialCards.length + 1)
 
   const words = cardsAtEnd.map((c) => c.word)
 
@@ -89,7 +119,7 @@ test('card without content is not added', async () => {
 
   const cardsAtEnd = await helper.cardsInDb()
 
-  expect(cardsAtEnd).toHaveLength(helper.initialCard.length)
+  expect(cardsAtEnd).toHaveLength(helper.initialCards.length)
 })
 
 test('a specific card can be viewed', async () => {
@@ -107,23 +137,25 @@ test('a specific card can be viewed', async () => {
   expect(resultCard.body).toEqual(processedCardToView)
 })
 
-test('a card can be deleted', async () => {
-  const cardsAtStart = await helper.cardsInDb()
-  const cardToDelete = cardsAtStart[0]
+describe('deletion of a note', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const cardsAtStart = await helper.cardsInDb()
+    const cardToDelete = cardsAtStart[0]
 
-  await api
-    .delete(`/cards/${cardToDelete.id}`)
-    .expect(204)
+    await api
+      .delete(`/cards/${cardToDelete.id}`)
+      .expect(204)
 
-  const cardsAtEnd = await helper.cardsInDb()
+    const cardsAtEnd = await helper.cardsInDb()
 
-  expect(cardsAtEnd).toHaveLength(
-    helper.initialNotes.length - 1,
-  )
+    expect(cardsAtEnd).toHaveLength(
+      helper.initialCards.length - 1,
+    )
 
-  const words = cardsAtEnd.map((c) => c.word)
+    const words = cardsAtEnd.map((c) => c.word)
 
-  expect(words).not.toContain(cardToDelete.word)
+    expect(words).not.toContain(cardToDelete.word)
+  })
 })
 
 afterAll(() => {

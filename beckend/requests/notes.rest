@@ -1,7 +1,7 @@
 GET http://localhost:3001/cards
 
 ###
-GET http://localhost:3001/cards/6117fc3a3d2bda2e880b14ce
+GET http://localhost:3001/cards/6117f145331ec40cdcb58864
 
 ###
 DELETE http://localhost:3001/cards/6118e33de5bad0178084b37e
@@ -11,6 +11,7 @@ POST http://localhost:3001/cards
 Content-Type: application/json
 
 {
+    "userId": "612b73e63ad2ef039c235b9f",
     "word": "test",
     "transcription": "[test]",
     "translation": "тест",
